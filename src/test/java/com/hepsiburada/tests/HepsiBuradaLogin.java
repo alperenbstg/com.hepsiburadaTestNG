@@ -6,18 +6,21 @@ import com.hepsiburada.utilities.Driver;
 import com.hepsiburada.utilities.ReusableMethods;
 import com.hepsiburada.utilities.TestBaseRapor;
 import org.openqa.selenium.Keys;
+
 import org.openqa.selenium.interactions.Actions;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.net.MalformedURLException;
+
 
 
 public class HepsiBuradaLogin extends TestBaseRapor {
 
-    @Test
+
+        @Test
     public void LoginTest() throws InterruptedException {
-
-
-
 
         ReusableMethods.waitFor(5);
         Driver.getDriver().get(ConfigReader.getProperty("hepsiburada_url"));
@@ -42,7 +45,8 @@ public class HepsiBuradaLogin extends TestBaseRapor {
 
     }
     @Test
-    public void searchBoxTest() throws InterruptedException {
+    public void searchBoxTest() throws InterruptedException, MalformedURLException {
+
             extentTest=extentReports.createTest("Urun begenip sepete ekledikten sonra sepetten cikarilma testi","Belilenen urun begenildikten sonra begendiklerime girilip urun sepete eklendi ardından sepetime gidilip urun sepetten cikarildi");
             HepsiburadaHomePage hepsiburadaHomePage = new HepsiburadaHomePage();
             LoginTest();
@@ -62,13 +66,16 @@ public class HepsiBuradaLogin extends TestBaseRapor {
             Assert.assertTrue(hepsiburadaHomePage.samsungDogrulama.getText().contains("samsung"));
             extentTest.info("Excepted result ile actual result karsilastirildi");
             Actions actions = new Actions(Driver.getDriver());
-            ReusableMethods.waitFor(2);
 
-            for (int i =1; i<=10;i++){
-                    if (!hepsiburadaHomePage.page2.isDisplayed()) {
-                            actions.sendKeys(Keys.PAGE_DOWN).perform();
-                    }
-            }
+            ReusableMethods.waitFor(2);
+            ReusableMethods.scrollToElement(hepsiburadaHomePage.page2);
+
+
+//            for (int i =1; i<=10;i++){
+//                    if (!hepsiburadaHomePage.page2.isDisplayed()) {
+//                            actions.sendKeys(Keys.PAGE_DOWN).perform();
+//                    }
+//            }
 
             hepsiburadaHomePage.page2.click();
             extentTest.info("Aranilan urunlerde ikinci sayfaya gecis yapildi");
@@ -106,28 +113,34 @@ public class HepsiBuradaLogin extends TestBaseRapor {
             Assert.assertTrue(seciliUrunAdi2.contains("Samsung"));
             extentTest.info("Belirlenen urunun begendiklerimde oldugu test edildi");
             ReusableMethods.waitFor(2);
-            actions.moveToElement(hepsiburadaHomePage.secilenUrunBegendiklerim).perform();
+//            actions.moveToElement(hepsiburadaHomePage.secilenUrunBegendiklerim).perform();
+//            ReusableMethods.waitFor(2);
+//            hepsiburadaHomePage.sepeteEkle.click();
+
             ReusableMethods.waitFor(2);
+            actions.sendKeys(Keys.ARROW_DOWN).perform();
+            actions.sendKeys(Keys.ARROW_DOWN).perform();
+            actions.moveToElement(hepsiburadaHomePage.secilenUrunBegendiklerim).perform();
+            ReusableMethods.waitFor(1);
             hepsiburadaHomePage.sepeteEkle.click();
             extentTest.info("begenilen urun sepete eklendi");
-            ReusableMethods.waitFor(2);
-            actions.sendKeys(Keys.ARROW_DOWN).perform();
-            actions.sendKeys(Keys.ARROW_DOWN).perform();
-            actions.moveToElement(hepsiburadaHomePage.secilenUrunBegendiklerim).perform();
-            ReusableMethods.waitFor(1);
-            hepsiburadaHomePage.sepeteEkle.click();
+
             ReusableMethods.waitFor(1);
             Assert.assertTrue(hepsiburadaHomePage.sepeteEklendiPopUp.isDisplayed());
+            extentTest.info("Begenilen urunun sepete eklendigi pop-up'nın kullanıcıya gosterildigi assert edildi");
             actions.sendKeys(Keys.PAGE_UP).perform();
             actions.sendKeys(Keys.PAGE_UP).perform();
             ReusableMethods.waitFor(6);
             hepsiburadaHomePage.sepetimeGit.click();
+            extentTest.info("Sepete gidildi");
             ReusableMethods.waitFor(2);
             hepsiburadaHomePage.copKutusu.click();
+            extentTest.info("Sepette bulunan urun sepetten cikarildi");
             ReusableMethods.waitFor(2);
             String urununsilindigidogrulama =  hepsiburadaHomePage.urununSilindiginiDogrulama.getText();
             System.out.println(urununsilindigidogrulama);
             Assert.assertTrue(urununsilindigidogrulama.contains("silin"));
+            extentTest.info("Sepetin bos olduguna dair assert yapildi");
 
     }
 
